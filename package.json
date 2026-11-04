@@ -1,6 +1,6 @@
 {
   "name": "search-auditor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "SEO and AI search audit in one report: classic technical SEO (indexing, canonical, meta, links, sitemap, hreflang, HTTPS) plus whether ChatGPT, Claude and Perplexity can read and cite the site. One crawl, one score, CI-ready.",
   "keywords": [
     "seo audit",
