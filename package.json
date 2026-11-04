@@ -1,0 +1,31 @@
+{
+  "name": "search-auditor",
+  "version": "0.0.0",
+  "description": "SEO and AI search audit in one report: classic technical SEO (indexing, canonical, meta, links, sitemap, hreflang, HTTPS) plus whether ChatGPT, Claude and Perplexity can read and cite the site. One crawl, one score, CI-ready.",
+  "keywords": ["seo audit", "search audit", "technical seo", "seo checker", "geo", "ai search", "ai seo", "aeo", "canonical", "hreflang", "sitemap", "lighthouse alternative", "ci"],
+  "license": "MIT",
+  "author": "Aleksandr Bibikov (https://albibikov.com)",
+  "homepage": "https://github.com/a-bibikov/search-auditor#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/a-bibikov/search-auditor.git" },
+  "bugs": "https://github.com/a-bibikov/search-auditor/issues",
+  "type": "module",
+  "bin": { "search-auditor": "dist/cli.js", "search-audit": "dist/cli.js" },
+  "exports": { ".": "./dist/index.js" },
+  "files": ["dist", "README.md", "LICENSE", "CHANGELOG.md"],
+  "engines": { "node": ">=22.18" },
+  "scripts": {
+    "audit": "node src/cli.ts",
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
+  },
+  "peerDependencies": {
+    "ai-search-auditor": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.0",
+    "ai-search-auditor": "^0.3.0",
+    "typescript": "^5.9.0"
+  }
+}
