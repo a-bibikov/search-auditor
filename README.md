@@ -1,10 +1,12 @@
 # search-auditor
 
-**Can Google, Bing and Yandex reach, index and show your site?** A technical SEO audit in one command: status codes, robots.txt, redirects, canonical, sitemap, titles and descriptions, headings, broken links, images, structured data, hreflang, HTTPS.
+**Can Google, Bing and Yandex reach, index and show your site?** A technical SEO audit in one command: status codes, robots.txt, redirects, canonical, sitemap, titles and descriptions, headings, broken links, images, structured data, hreflang, HTTPS. 80 checks, each with what it costs and how to fix it.
 
 ```bash
 npx search-auditor https://example.com
 ```
+
+![The report for albibikov.com: the score, what to do first and the first group of the checklist](docs/report.png)
 
 No sign-up, no API keys. Node.js 22.18+.
 
@@ -120,6 +122,38 @@ Levels: `error` — search engines cannot index the page or index the wrong one;
 
 The report opens with the score and the number of errors, warnings and notes. Then what to do first: the three changes worth the most, each with what to do, on which pages it was found and why it matters. Then a table per group: every check with ✓ OK, ✖ error, ⚠ warning, ℹ note or – not checked, and what was found. It ends with one table of recommendations in checklist order, group by group: the check, its severity, what to do, and a comment on what was found where. A check that cannot run on a site — hreflang on a site in one language, HTTPS on a local build — is marked «not checked» with the reason, never as passed.
 
+```
+### META. Meta tags: how a page looks in search results
+
+7 of 9 OK
+
+|     | Check                                                        | Result                     |
+|-----|--------------------------------------------------------------|----------------------------|
+| ✓   | META-1 Every page has a title of the right length            | OK                         |
+| ℹ   | META-2 Every page has a description of the right length      | 1 note · 1 of 20 pages     |
+| ⚠   | META-3 Titles and descriptions are not repeated across pages | 4 warnings · 4 of 20 pages |
+| ✓   | META-4 One title and one description per page                | OK                         |
+| ✓   | META-5 The title names the page, not a template              | OK                         |
+| ✓   | META-6 The description adds to the title                     | OK                         |
+| ✓   | META-7 The page declares its encoding                        | OK                         |
+| ✓   | META-8 The snippet is not forbidden                          | OK                         |
+| ✓   | META-9 The site has a favicon                                | OK                         |
+```
+
+With `--json`, every finding reads on its own: what the check is, what was found against which norm, why it is a problem and how to fix it.
+
+```json
+{
+  "rule": "META-2",
+  "level": "info",
+  "title": "Every page has a description of the right length",
+  "where": "https://albibikov.com/ru/privacy",
+  "message": "description of 165 characters, should be 50–160",
+  "why": "Without a description search engines pick a random snippet, a long one is cut off mid-sentence, and fewer people click.",
+  "fix": "Add `<meta name=\"description\">` of about 50–160 characters: what the page offers and why to open it."
+}
+```
+
 **Score:** 100 minus 15 for each check with an error and 5 for each check with a warning; a warning that covers at least half of the audited pages costs 10. A ≥ 90, B ≥ 80, C ≥ 70, D ≥ 60, F below; if fewer than two thirds of the checks could run, the grade is capped at B.
 
 ## Usage
@@ -181,15 +215,29 @@ console.log(toMarkdown(report));
 
 The crawl, the scoring and the report come from [auditor-engine](https://github.com/a-bibikov/auditor-engine). The checks are exported as `seoRules`, with `collect` for the extra requests they need, for your own runner.
 
+## Example
+
+[albibikov.com](https://albibikov.com), a Next.js site in English and Russian (20 pages, local production build): **95/100 (A)**, 70 of 80 checks run. The connection checks — HTTPS, the certificate, HSTS, the server speed — need the live site and are marked «not checked» on a local build; so are external links when the audit has no internet access.
+
+| | Found |
+|---|---|
+| META-3 ⚠ | The same title on `/` and `/cv`, and on `/ru` and `/ru/cv` |
+| META-2 ℹ | A description of 165 characters on `/ru/privacy`, should be 50–160 |
+| DATA-6 ℹ | No WebSite with the site name on the home page |
+
 ## Roadmap
 
-- **CAN-4** Canonical chains: a canonical target whose own canonical points further
-- **MAP-4** Every audited page is in the sitemap
-- **LNK-3** Orphan pages: in the sitemap, but no internal link leads to them
-- **IMG-2** Images are sized and lazy-loaded, so they do not slow the page down
-- **PERF-1** Page weight and Core Web Vitals
-- **SOC-1** Twitter / X cards in addition to Open Graph
+**PERF. Speed** — page weight, render-blocking scripts and styles, Core Web Vitals from the Chrome UX Report
+
+**SOC. Link cards** — Open Graph and Twitter / X cards for every page
+
+- **GitHub Action**, like the one of [ai-search-auditor](https://github.com/a-bibikov/ai-search-audit#github-action), with the report in the job summary
+- **CI that reports only new problems,** with a file of accepted exceptions
+- **SARIF output,** so findings show up in GitHub code scanning
+- **HTML report** to share with people who do not read Markdown
+
+Ideas are welcome in [issues](https://github.com/a-bibikov/search-auditor/issues); for pull requests see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT
+MIT © [Aleksandr Bibikov](https://albibikov.com)
