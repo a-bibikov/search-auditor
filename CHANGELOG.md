@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.0](https://github.com/a-bibikov/search-auditor/compare/v0.1.1...v0.2.0) (2026-11-09)
+
+
+### New checks and features
+
+* expand SEO checks and split rules into modules ([#10](https://github.com/a-bibikov/search-auditor/issues/10)) ([f79eddb](https://github.com/a-bibikov/search-auditor/commit/f79eddbd20487f50418ac20c84a1964820877c8c))
+* expand SEO checks and split rules into modules ([#10](https://github.com/a-bibikov/search-auditor/issues/10)) ([41f4cab](https://github.com/a-bibikov/search-auditor/commit/41f4cab66cefe1f06402b40bf58ff8cf9acf7caf))
+
 ## [0.1.1](https://github.com/a-bibikov/search-auditor/compare/v0.1.0...v0.1.1) (2026-11-04)
 
 
