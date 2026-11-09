@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { DEFAULT_LANG, LANGS, isLang, parsePages, toMarkdown } from "ai-search-auditor";
+import { DEFAULT_LANG, LANGS, isLang, parsePages, toJSON, toMarkdown } from "auditor-engine";
 import { auditSearch, type Report, type SearchConfig } from "./index.ts";
 
-const HELP = `search-auditor — one crawl, one report: can Google, Bing and AI search (ChatGPT, Claude, Perplexity) find, read and cite your site?
+const HELP = `search-auditor — technical SEO audit: can Google, Bing and Yandex reach, index and show your site?
+
+AI search (ChatGPT, Claude, Perplexity) is checked by ai-search-auditor: npx ai-search-auditor <url>
 
 Usage:
   search-auditor <url> [options]
@@ -13,9 +15,9 @@ Options:
   --base <url>        public origin when auditing a local build (links in sitemap point there)
   --pages <n|all>     pages to audit: a number sampled across templates (default 20), or all pages in the sitemap
   --max-links <n>     internal links to request (default 100)
-  --no-ai             classic search checks only
   --fail-on <level>   exit 1 on: error (default), warn, never
   --lang <lang>       report language: ${Object.keys(LANGS).join(", ")} (default ${DEFAULT_LANG})
+  --width <n>         fit tables into n characters (default: the terminal width; 0 — no wrapping)
   --json              print the JSON report instead of Markdown
   --out <file>        also write the report to a file (.json or .md)
   --config <file>     config file (default: search-auditor.config.json if present)
@@ -25,7 +27,7 @@ Options:
 Examples:
   npx search-auditor https://example.com
   npx search-auditor http://127.0.0.1:3000 --base https://example.com --fail-on warn
-  npx search-auditor https://example.com --lang ru --no-ai
+  npx search-auditor https://example.com --lang ru
   npx search-auditor https://example.com --pages all
 `;
 
@@ -33,16 +35,17 @@ Examples:
 let parsed;
 try {
   parsed = parseArgs({
+  // --no-ai turned the AI search checks off; they are no longer here, so old scripts keep working without it.
+  args: process.argv.slice(2).filter((a) => a !== "--no-ai"),
   allowPositionals: true,
-  allowNegative: true,
   options: {
     base: { type: "string" },
     pages: { type: "string" },
     "max-links": { type: "string" },
-    ai: { type: "boolean" },
     "fail-on": { type: "string", default: "error" },
     lang: { type: "string" },
     json: { type: "boolean", default: false },
+    width: { type: "string" },
     out: { type: "string" },
     config: { type: "string" },
     verbose: { type: "boolean", short: "v", default: false },
@@ -90,7 +93,6 @@ const config: Partial<SearchConfig> = {
   lang,
   ...(maxPages ? { maxPages } : {}),
   ...(maxLinks ? { maxLinks } : {}),
-  ...(values.ai === false ? { ai: false } : {}),
 };
 
 // Progress goes to stderr, so `--json > report.json` stays clean.
@@ -102,9 +104,14 @@ try {
   fail((e as Error).message);
 }
 const markdown = toMarkdown(report);
+// In a terminal, tables fit the window and long cells wrap; a file and a CI summary keep plain Markdown.
+if (values.width !== undefined && !/^\d+$/.test(values.width)) fail(`--width must be a whole number, got «${values.width}»`);
+const columns = values.width !== undefined ? Number(values.width) : process.stdout.isTTY ? process.stdout.columns : 0;
+const screen = columns > 0 ? toMarkdown(report, { width: columns }) : markdown;
 
-process.stdout.write(values.json ? JSON.stringify(report, null, 2) + "\n" : markdown);
-if (values.out) writeFileSync(values.out, values.out.endsWith(".json") ? JSON.stringify(report, null, 2) : markdown);
+const json = JSON.stringify(toJSON(report), null, 2) + "\n";
+process.stdout.write(values.json ? json : screen);
+if (values.out) writeFileSync(values.out, values.out.endsWith(".json") ? json : markdown);
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
 
 const failOn = values["fail-on"];
