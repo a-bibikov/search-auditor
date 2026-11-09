@@ -1,4 +1,4 @@
-import type { Fetched, Rule } from "ai-search-auditor";
+import type { Fetched, Rule } from "auditor-engine";
 import type { SeoMessages } from "../i18n/index.ts";
 import type { SearchConfig } from "../types.ts";
 

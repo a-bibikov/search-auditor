@@ -2,9 +2,18 @@
 
 ## Checks
 
-A classic search check is one rule in `src/rules/` plus its title, fix, impact and messages in every language in `src/i18n/`. It ships with tests: a site where it must fire and one where it must stay silent (`test/`). `npm test` must pass.
+A classic search check is one file in the folder of its group — `src/rules/idx/idx-4.ts` for IDX-4 — plus its title, short action (`todo`), fix, impact and messages in every language in `src/i18n/`.
 
-A check about AI search belongs in [ai-search-auditor](https://github.com/a-bibikov/ai-search-audit): this package runs those checks as they are. A check never repeats one from the other package.
+```
+src/rules/idx/
+  index.ts    what the group checks, and the list of its checks in order
+  shared.ts   constants and helpers several checks of the group use
+  idx-1.ts    one check per file, starting with its id and title
+```
+
+A new check goes into its group's `index.ts` list. A new group is a new folder, a line in `SEO_GROUPS` and `src/rules/index.ts`, and its name in `groups` of every language. It ships with tests: a site where it must fire and one where it must stay silent (`test/`). `npm test` must pass.
+
+A check about AI search belongs in [ai-search-auditor](https://github.com/a-bibikov/ai-search-audit). This package checks classic search only.
 
 If a check needs a request the shared crawl does not make, add it to `src/collect.ts`: it runs once per audit, in the same pass.
 
@@ -36,4 +45,4 @@ To force a version, add a footer to a commit message: `Release-As: 0.2.0`.
 
 Never change `version` in `package.json` by hand: release-please owns it.
 
-When ai-search-auditor changes its engine API, raise the `peerDependencies` range in the same pull request.
+The crawl, the HTML parser, the scoring and the report live in [auditor-engine](https://github.com/a-bibikov/auditor-engine): a change there is released first, then the `auditor-engine` range here is raised.
