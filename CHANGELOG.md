@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/a-bibikov/search-auditor/compare/v0.2.0...v0.2.1) (2026-11-09)
+
+
+### Documentation
+
+* report screenshot, examples and the current roadmap ([70435c1](https://github.com/a-bibikov/search-auditor/commit/70435c155a16f8be5e6f744b871bfbc576414426))
+
 ## [0.2.0](https://github.com/a-bibikov/search-auditor/compare/v0.1.1...v0.2.0) (2026-11-09)
 
 
