@@ -1,6 +1,6 @@
 {
   "name": "search-auditor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Technical SEO audit from the command line: indexing, robots.txt, redirects, canonical, sitemap, meta tags, headings, links, images, structured data, hreflang, HTTPS. One score, CI-ready.",
   "keywords": [
     "seo audit",
