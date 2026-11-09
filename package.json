@@ -1,16 +1,12 @@
 {
   "name": "search-auditor",
   "version": "0.1.0",
-  "description": "SEO and AI search audit in one report: classic technical SEO (indexing, canonical, meta, links, sitemap, hreflang, HTTPS) plus whether ChatGPT, Claude and Perplexity can read and cite the site. One crawl, one score, CI-ready.",
+  "description": "Technical SEO audit from the command line: indexing, robots.txt, redirects, canonical, sitemap, meta tags, headings, links, images, structured data, hreflang, HTTPS. One score, CI-ready.",
   "keywords": [
     "seo audit",
     "search audit",
     "technical seo",
     "seo checker",
-    "geo",
-    "ai search",
-    "ai seo",
-    "aeo",
     "canonical",
     "hreflang",
     "sitemap",
@@ -49,12 +45,11 @@
     "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
-  "peerDependencies": {
-    "ai-search-auditor": ">=0.3.0 <1"
+  "dependencies": {
+    "auditor-engine": "^0.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.18.0",
-    "ai-search-auditor": "^0.3.0",
     "typescript": "^5.9.0"
   }
 }

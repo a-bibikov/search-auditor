@@ -15,7 +15,8 @@ export type Routes = Record<string, Route>;
 export async function serve(routes: Routes, fallback?: (path: string) => Route | undefined): Promise<{ origin: string; close: () => Promise<void> }> {
   const server: Server = createServer((req, res) => {
     const path = (req.url ?? "/").split("?")[0]!;
-    const route = routes[path] ?? fallback?.(path);
+    // A route keyed by the full address with its query wins: a page that answers parameters differently.
+    const route = routes[req.url ?? "/"] ?? routes[path] ?? fallback?.(path);
     if (!route) {
       res.writeHead(404, { "content-type": "text/html" }).end("<h1>Not found</h1>");
       return;
@@ -38,12 +39,16 @@ export const html = (o: {
   canonical?: string | null;
   lang?: string | null;
   viewport?: boolean;
+  charset?: boolean;
+  icon?: boolean;
   head?: string;
   body: string;
 }) => `<!doctype html><html${o.lang === null ? "" : ` lang="${o.lang ?? "en"}"`}><head>
 ${o.title === null ? "" : `<title>${o.title}</title>`}
 ${o.description ? `<meta name="description" content="${o.description}">` : ""}
+${o.charset === false ? "" : `<meta charset="utf-8">`}
 ${o.viewport === false ? "" : `<meta name="viewport" content="width=device-width, initial-scale=1">`}
+${o.icon === false ? "" : `<link rel="icon" href="/favicon.svg">`}
 ${o.canonical ? `<link rel="canonical" href="${o.canonical}">` : ""}
 ${o.head ?? ""}
 </head><body><header><a href="/">Home</a></header><main>${o.body}</main></body></html>`;
