@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { parseArgs } from "node:util";
-import { DEFAULT_LANG, LANGS, isLang, parsePages, toJSON, toMarkdown } from "auditor-engine";
+import { DEFAULT_LANG, LANGS, badgeMarkdown, isLang, parsePages, toBadge, toBadgeEndpoint, toJSON, toMarkdown } from "auditor-engine";
 import { auditSearch, type Report, type SearchConfig } from "./index.ts";
 
 const HELP = `search-auditor — technical SEO audit: can Google, Bing and Yandex reach, index and show your site?
@@ -20,6 +20,7 @@ Options:
   --width <n>         fit tables into n characters (default: the terminal width; 0 — no wrapping)
   --json              print the JSON report instead of Markdown
   --out <file>        also write the report to a file (.json or .md)
+  --badge <file>      also write a score badge: .svg to show in a README, .json for a shields.io endpoint
   --config <file>     config file (default: search-auditor.config.json if present)
   -v, --verbose       show progress
   -h, --help
@@ -47,6 +48,7 @@ try {
     json: { type: "boolean", default: false },
     width: { type: "string" },
     out: { type: "string" },
+    badge: { type: "string" },
     config: { type: "string" },
     verbose: { type: "boolean", short: "v", default: false },
     help: { type: "boolean", short: "h", default: false },
@@ -112,6 +114,13 @@ const screen = columns > 0 ? toMarkdown(report, { width: columns }) : markdown;
 const json = JSON.stringify(toJSON(report), null, 2) + "\n";
 process.stdout.write(values.json ? json : screen);
 if (values.out) writeFileSync(values.out, values.out.endsWith(".json") ? json : markdown);
+if (values.badge) {
+  const badge = { label: "SEO" };
+  writeFileSync(values.badge, values.badge.endsWith(".json") ? JSON.stringify(toBadgeEndpoint(report, badge)) + "\n" : toBadge(report, badge));
+  // The README line goes to stderr, so `--json > report.json` stays clean.
+  const image = values.badge.endsWith(".json") ? `https://img.shields.io/endpoint?url=<public URL of ${values.badge}>` : values.badge;
+  process.stderr.write(`· badge: ${values.badge}\n  ${badgeMarkdown(report, { ...badge, image, link: report.tool?.url ?? "" })}\n`);
+}
 if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
 
 const failOn = values["fail-on"];
