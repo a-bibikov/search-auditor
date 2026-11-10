@@ -1,5 +1,7 @@
 # search-auditor
 
+[![npm](https://img.shields.io/npm/v/search-auditor)](https://www.npmjs.com/package/search-auditor) [![GitHub stars](https://img.shields.io/github/stars/a-bibikov/search-auditor?style=social)](https://github.com/a-bibikov/search-auditor)
+
 **Can Google, Bing and Yandex reach, index and show your site?** A technical SEO audit in one command: status codes, robots.txt, redirects, canonical, sitemap, titles and descriptions, headings, broken links, images, structured data, hreflang, HTTPS. 80 checks, each with what it costs and how to fix it.
 
 ```bash
@@ -9,6 +11,8 @@ npx search-auditor https://example.com
 ![The report for albibikov.com: the score, what to do first and the first group of the checklist](docs/report.png)
 
 No sign-up, no API keys. Node.js 22.18+.
+
+If it saved you time, a ⭐ on [GitHub](https://github.com/a-bibikov/search-auditor) helps other people find it.
 
 ## AI search
 
