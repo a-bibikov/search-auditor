@@ -1,6 +1,6 @@
 {
   "name": "search-auditor",
-  "version": "0.2.1",
+  "version": "0.0.0-development",
   "description": "Technical SEO audit from the command line: indexing, robots.txt, redirects, canonical, sitemap, meta tags, headings, links, images, structured data, hreflang, HTTPS. One score, CI-ready.",
   "keywords": [
     "seo audit",
@@ -46,7 +46,7 @@
     "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "dependencies": {
-    "auditor-engine": "^0.1.0"
+    "auditor-engine": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^22.18.0",
