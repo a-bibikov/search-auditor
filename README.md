@@ -185,6 +185,7 @@ npx search-auditor https://example.com --json --out report.json
 | `--width <n>` | Fit tables into n characters; long cells wrap inside their column. Default: the terminal width in a terminal, plain Markdown in a file or a pipe; `0` turns wrapping off |
 | `--json` | JSON instead of Markdown: each finding has its check `title`, the `message`, `why` it is a problem and how to `fix` it |
 | `--out <file>` | Also write the report to a file |
+| `--badge <file>` | Also write a score badge: `.svg` to show in a README, `.json` for a [shields.io endpoint](https://shields.io/badges/endpoint-badge). See [Badge](#badge) |
 | `--config <file>` | Config file (default `search-auditor.config.json`) |
 | `-v`, `--verbose` | Show progress |
 
@@ -202,6 +203,26 @@ Config:
 `maxPages`: a number or `"all"`. With `"all"` every page in the sitemap is audited, so raise `maxLinks` too if you want every internal link checked.
 
 In CI the Markdown report also goes to the job summary (`GITHUB_STEP_SUMMARY`).
+
+## Badge
+
+Show your score in your own README:
+
+```bash
+npx search-auditor https://example.com --badge seo-badge.svg
+```
+
+The command writes a badge like **SEO | 95/100**, colored by grade (A green … F red), and prints the line to paste:
+
+```md
+[![SEO: 95/100](seo-badge.svg)](https://github.com/a-bibikov/search-auditor)
+```
+
+To keep the badge current, write it as JSON in CI (`--badge badge.json`), publish the file (GitHub Pages, your site, a gist) and show it through shields.io:
+
+```md
+[![SEO](https://img.shields.io/endpoint?url=https://example.com/badge.json)](https://github.com/a-bibikov/search-auditor)
+```
 
 ## As a library
 
