@@ -1,5 +1,7 @@
 # Changelog
 
+From the next release on, the changes of every version are in [GitHub Releases](https://github.com/a-bibikov/search-auditor/releases).
+
 ## [0.2.1](https://github.com/a-bibikov/search-auditor/compare/v0.2.0...v0.2.1) (2026-11-09)
 
 
